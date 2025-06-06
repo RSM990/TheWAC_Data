@@ -13,9 +13,9 @@ class NFLGameLoader:
         self.connection = pyodbc.connect(settings.CURRENT_CONNECTION_STRING)
         self.cursor = self.connection.cursor()
 
-        url = 'https://www.pro-football-reference.com/years/2023/games.htm'
+        url = 'https://www.pro-football-reference.com/years/2024/games.htm'
 
-        current_game_id = 1057
+        current_game_id = 1329
 
         soup = get_soup(url)
         rows = soup.find_all("table")[0].find_all('tbody')[0].find_all('tr')
@@ -46,7 +46,7 @@ class NFLGameLoader:
             time = cols[7].get_text()
             self.cursor.execute(
                 "INSERT INTO NFLSchedule ([Id],[SeasonId], [Week], [HomeTeamId], [AwayTeamId], [StartTime],[BoxscoreLink]) VALUES (?,?,?,?,?,?,?)",
-                current_game_id, 6, week, home_team_id, away_team_id, "{}-{}-{} {}".format(year, month, day, time), date_link)
+                current_game_id, 7, week, home_team_id, away_team_id, "{}-{}-{} {}".format(year, month, day, time), date_link)
             self.cursor.commit()
             print(
                 "Week {} : {} ({}) @ {} ({}) {}/{}/{} {} {}".format(week, away, away_team_id, home, home_team_id, month, day, year,

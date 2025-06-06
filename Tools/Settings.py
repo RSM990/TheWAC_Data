@@ -11,4 +11,4 @@ class Settings:
         self.DEV_CONNECTION_STRING = \
             'DRIVER={SQL Server Native Client 11.0};server=(localdb)\\mssqllocaldb;database=TheWAC;'
 
-        self.CURRENT_CONNECTION_STRING = self.PRODUCTION_CONNECTION_STRING;
+        self.CURRENT_CONNECTION_STRING = self.PRODUCTION_CONNECTION_STRING

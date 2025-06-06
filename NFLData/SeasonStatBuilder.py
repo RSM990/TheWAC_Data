@@ -57,13 +57,16 @@ class SeasonStatBuilder:
                         stat_id = row[0]
                     if stat_id > 0:
                         # update
-                        # passingCursor.execute("UPDATE [dbo].[PlayerStatLines] ([SeasonId], [PlayerId], [GamesPlayed], [GamesStarted], [PassYards], [Completions],[PassTDs],[Interceptions],[PassAttempts],[QBRating]) VALUES (?,?,?,?,?,?,?,?,?,?)", seasonId, playerId,gamesPlayed,games_started,yards,comp,td,inter,attempts,qbr)
+                        passing_cursor.execute(
+                            "UPDATE PlayerStatLines SET [GamesStarted] = ?,[GamesPlayed] = ?, [PassYards] = ?,[Completions] = ?,[PassTDs] = ?,[Interceptions] = ?,[PassAttempts] = ?, [QBRating] = ? WHERE SeasonId = ? AND PlayerId = ? AND ProjectedStat = 0 AND NFLWeek = 0",
+                            games_started, games_played, yards, comp, td, inter, attempts, qbr, season_id, player_id)
+
                         passing_cursor.commit()
                     else:
                         # add
                         passing_cursor.execute(
-                            "INSERT INTO PlayerStatLines ([SeasonId], [NFLWeek], [PlayerId], [GamesPlayed], [GamesStarted], [PassYards], [Completions],[PassTDs],[Interceptions],[PassAttempts],[QBRating]) VALUES (?,?,?,?,?,?,?,?,?,?,?)",
-                            season_id, 0, player_id, games_played, games_started, yards, comp, td, inter, attempts, qbr)
+                            "INSERT INTO PlayerStatLines ([SeasonId], [ProjectedStat], [NFLWeek], [PlayerId], [GamesPlayed], [GamesStarted], [PassYards], [Completions],[PassTDs],[Interceptions],[PassAttempts],[QBRating]) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)",
+                            season_id, 0, 0, player_id, games_played, games_started, yards, comp, td, inter, attempts, qbr)
                         passing_cursor.commit()
                 print(
                     "Name: {} ({}) - Games: ({}/{})  Comp: {}  Attempt: {}  Yards: {} TDs: {} INTs: {} QBR: {}".format(
@@ -105,21 +108,21 @@ class SeasonStatBuilder:
                 if isinstance(player_id, int):
                     stat_id = -1
                     rushingCursor.execute(
-                        "SELECT * FROM PlayerStatLines WHERE SeasonId = ? AND PlayerId = ? AND NFLWeek = 0", season_id,
+                        "SELECT * FROM PlayerStatLines WHERE SeasonId = ? AND PlayerId = ? AND ProjectedStat = 0 AND NFLWeek = 0", season_id,
                         player_id)
                     for row in rushingCursor.fetchall():
                         stat_id = row[0]
                     if stat_id > 0:
                         #                 update
                         rushingCursor.execute(
-                            "UPDATE PlayerStatLines SET [GamesStarted] = ?,[GamesPlayed] = ?, [RushAttempts] = ?,[RushYards] = ?,[RushTDs] = ?,[Fumbles] = ?,[RushAverage] = ? WHERE SeasonId = ? AND PlayerId = ?",
+                            "UPDATE PlayerStatLines SET [GamesStarted] = ?,[GamesPlayed] = ?, [RushAttempts] = ?,[RushYards] = ?,[RushTDs] = ?,[Fumbles] = ?,[RushAverage] = ? WHERE SeasonId = ? AND PlayerId = ? AND ProjectedStat = 0 AND NFLWeek = 0",
                             games_started, games_played, attempts, yards, td, fumbles, average, season_id, player_id)
                         rushingCursor.commit()
                     else:
                         #                 add
                         rushingCursor.execute(
-                            "INSERT INTO PlayerStatLines ([SeasonId], [NFLWeek], [PlayerId],[GamesStarted],[GamesPlayed], [RushAttempts],[RushYards],[RushTDs],[Fumbles],[RushAverage]) VALUES (?,?,?,?,?,?,?,?,?,?)",
-                            season_id, 0, player_id, games_started, games_played, attempts, yards, td, fumbles, average)
+                            "INSERT INTO PlayerStatLines ([SeasonId], [NFLWeek], [ProjectedStat], [PlayerId],[GamesStarted],[GamesPlayed], [RushAttempts],[RushYards],[RushTDs],[Fumbles],[RushAverage]) VALUES (?,?,?,?,?,?,?,?,?,?,?)",
+                            season_id, 0, 0, player_id, games_started, games_played, attempts, yards, td, fumbles, average)
                         rushingCursor.commit()
 
 
@@ -161,21 +164,21 @@ class SeasonStatBuilder:
                 if isinstance(player_id, int):
                     stat_id = -1
                     rec_cursor.execute(
-                        "SELECT * FROM PlayerStatLines WHERE SeasonId = ? AND PlayerId = ? AND NFLWeek = 0", season_id,
+                        "SELECT * FROM PlayerStatLines WHERE SeasonId = ? AND PlayerId = ? AND ProjectedStat = 0 AND NFLWeek = 0", season_id,
                         player_id)
                     for row in rec_cursor.fetchall():
                         stat_id = row[0]
                     if stat_id > 0:
                         #                 update
                         rec_cursor.execute(
-                            "UPDATE PlayerStatLines SET [GamesStarted] = ?,[GamesPlayed] = ?, [Targets] = ?, [Receptions] = ?, [RecYards] = ?,[RecTDs] = ?,[Fumbles] = ?,[RecAverage] = ? WHERE SeasonId = ? AND PlayerId = ?",
+                            "UPDATE PlayerStatLines SET [GamesStarted] = ?,[GamesPlayed] = ?, [Targets] = ?, [Receptions] = ?, [RecYards] = ?,[RecTDs] = ?,[Fumbles] = ?,[RecAverage] = ? WHERE SeasonId = ? AND PlayerId = ? AND ProjectedStat = 0 AND NFLWeek = 0",
                             games_started, games_played, targets, rec, yards, td, fumbles, average, season_id, player_id)
                         rec_cursor.commit()
                     else:
                         #                 add
                         rec_cursor.execute(
-                            "INSERT INTO PlayerStatLines ([SeasonId], [NFLWeek], [PlayerId],[GamesStarted],[GamesPlayed], [Targets],[Receptions],[RecYards],[RecTDs],[Fumbles],[RecAverage]) VALUES (?,?,?,?,?,?,?,?,?,?,?)",
-                            season_id, 0, player_id, games_started, games_played, targets, rec, yards, td, fumbles, average)
+                            "INSERT INTO PlayerStatLines ([SeasonId], [NFLWeek], [ProjectedStat], [PlayerId],[GamesStarted],[GamesPlayed], [Targets],[Receptions],[RecYards],[RecTDs],[Fumbles],[RecAverage]) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)",
+                            season_id, 0, 0, player_id, games_started, games_played, targets, rec, yards, td, fumbles, average)
                         rec_cursor.commit()
 
 
@@ -215,22 +218,22 @@ class SeasonStatBuilder:
                 if isinstance(player_id, int):
                     stat_id = -1
                     return_cursor.execute(
-                        "SELECT * FROM PlayerStatLines WHERE SeasonId = ? AND PlayerId = ? AND NFLWeek = 0", season_id,
+                        "SELECT * FROM PlayerStatLines WHERE SeasonId = ? AND PlayerId = ? AND ProjectedStat = 0 AND NFLWeek = 0", season_id,
                         player_id)
                     for row in return_cursor.fetchall():
                         stat_id = row[0]
                     if stat_id > 0:
                         #                 update
                         return_cursor.execute(
-                            "UPDATE PlayerStatLines SET [GamesStarted] = ?,[GamesPlayed] = ?, [PRAttempted] = ?,[PRYards] = ?,[PRTDs] = ?,[KRAttempted] = ?,[KRYards] = ?, [KRTDs] = ? WHERE SeasonId = ? AND PlayerId = ?",
+                            "UPDATE PlayerStatLines SET [GamesStarted] = ?,[GamesPlayed] = ?, [PRAttempted] = ?,[PRYards] = ?,[PRTDs] = ?,[KRAttempted] = ?,[KRYards] = ?, [KRTDs] = ? WHERE SeasonId = ? AND PlayerId = ? AND ProjectedStat = 0 AND NFLWeek = 0",
                             games_started, games_played, punt_attempts, punt_yards, punt_tds, kick_attempts, kick_yards,
                             kick_tds, season_id, player_id)
                         return_cursor.commit()
                     else:
                         #                 add
                         return_cursor.execute(
-                            "INSERT INTO PlayerStatLines ([SeasonId], [NFLWeek], [PlayerId],[GamesStarted],[GamesPlayed], [PRAttempted],[PRYards],[PRTDs],[KRAttempted],[KRYards], [KRTDs]) VALUES (?,?,?,?,?,?,?,?,?,?,?)",
-                            season_id, 0, player_id, games_started, games_played, punt_attempts, punt_yards, punt_tds,
+                            "INSERT INTO PlayerStatLines ([SeasonId], [NFLWeek], [ProjectedStat], [PlayerId],[GamesStarted],[GamesPlayed], [PRAttempted],[PRYards],[PRTDs],[KRAttempted],[KRYards], [KRTDs]) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)",
+                            season_id, 0, 0, player_id, games_started, games_played, punt_attempts, punt_yards, punt_tds,
                             kick_attempts, kick_yards, kick_tds)
                         return_cursor.commit()
                 print(
@@ -266,21 +269,21 @@ class SeasonStatBuilder:
                 if isinstance(player_id, int):
                     stat_id = -1
                     scoring_cursor.execute(
-                        "SELECT * FROM PlayerStatLines WHERE SeasonId = ? AND PlayerId = ? AND NFLWeek = 0", season_id,
+                        "SELECT * FROM PlayerStatLines WHERE SeasonId = ? AND PlayerId = ? AND ProjectedStat = 0 AND NFLWeek = 0", season_id,
                         player_id)
                     for row in scoring_cursor.fetchall():
                         stat_id = row[0]
                     if stat_id > 0:
                         #                 update
                         scoring_cursor.execute(
-                            "UPDATE PlayerStatLines SET [GamesStarted] = ?,[GamesPlayed] = ?, [TwoPointConv] = ? WHERE SeasonId = ? AND PlayerId = ?",
+                            "UPDATE PlayerStatLines SET [GamesStarted] = ?,[GamesPlayed] = ?, [TwoPointConv] = ? WHERE SeasonId = ? AND PlayerId = ? AND ProjectedStat = 0 AND NFLWeek = 0",
                             games_started, games_played, made, season_id, player_id)
                         scoring_cursor.commit()
                     else:
                         #                 add
                         scoring_cursor.execute(
-                            "INSERT INTO PlayerStatLines ([SeasonId], [NFLWeek], [PlayerId],[GamesStarted],[GamesPlayed], [TwoPointConv]) VALUES (?,?,?,?,?,?)",
-                            season_id, 0, player_id, games_started, games_played, made)
+                            "INSERT INTO PlayerStatLines ([SeasonId], [NFLWeek], [ProjectedStat], [PlayerId],[GamesStarted],[GamesPlayed], [TwoPointConv]) VALUES (?,?,?,?,?,?,?)",
+                            season_id, 0, 0, player_id, games_started, games_played, made)
                         scoring_cursor.commit()
                 print("Name: {} ({}) Games ({}/{}) - Made:{}".format(name.strip(), player_id, games_started,
                                                                      games_played, made))
@@ -334,22 +337,22 @@ class SeasonStatBuilder:
                 if isinstance(player_id, int):
                     stat_id = -1
                     kicking_cursor.execute(
-                        "SELECT * FROM PlayerStatLines WHERE SeasonId = ? AND PlayerId = ? AND NFLWeek = 0", season_id,
+                        "SELECT * FROM PlayerStatLines WHERE SeasonId = ? AND PlayerId = ? AND ProjectedStat = 0 AND NFLWeek = 0", season_id,
                         player_id)
                     for row in kicking_cursor.fetchall():
                         stat_id = row[0]
                     if stat_id > 0:
                         #                 update
                         kicking_cursor.execute(
-                            "UPDATE PlayerStatLines SET [GamesStarted] = ?,[GamesPlayed] = ?, [FieldGoalsMade] = ?, [FieldGoalsAttempted] = ?, [FieldGoals1to19Attempted] = ?,[FieldGoals1to19Made] = ?,[FieldGoals20to29Attempted] = ?,[FieldGoals20to29Made] = ?,[FieldGoals30to39Attempted] = ?,[FieldGoals30to39Made] = ?,[FieldGoals40to49Attempted] = ?,[FieldGoals40to49Made] = ?,[FieldGoals50PlusAttempted] = ?,[FieldGoals50PlusMade] = ?,[PATAttempted] = ?,[PATMade] = ?  WHERE SeasonId = ? AND PlayerId = ?",
+                            "UPDATE PlayerStatLines SET [GamesStarted] = ?,[GamesPlayed] = ?, [FieldGoalsMade] = ?, [FieldGoalsAttempted] = ?, [FieldGoals1to19Attempted] = ?,[FieldGoals1to19Made] = ?,[FieldGoals20to29Attempted] = ?,[FieldGoals20to29Made] = ?,[FieldGoals30to39Attempted] = ?,[FieldGoals30to39Made] = ?,[FieldGoals40to49Attempted] = ?,[FieldGoals40to49Made] = ?,[FieldGoals50PlusAttempted] = ?,[FieldGoals50PlusMade] = ?,[PATAttempted] = ?,[PATMade] = ?  WHERE SeasonId = ? AND PlayerId = ? AND ProjectedStat = 0 AND NFLWeek = 0",
                             games_started, games_played, fg_made, fg_attempt, fg19Att, fg19Made, fg20Att, fg20Made, fg30Att,
                             fg30Made, fg40Att, fg40Made, fg50Att, fg50Made, xp_attempt, xp_made, season_id, player_id)
                         kicking_cursor.commit()
                     else:
                         #                 add
                         kicking_cursor.execute(
-                            "INSERT INTO PlayerStatLines ([SeasonId], [NFLWeek], [PlayerId],[GamesStarted],[GamesPlayed],[FieldGoalsMade],[FieldGoalsAttempted],[FieldGoals1to19Attempted],[FieldGoals1to19Made],[FieldGoals20to29Attempted],[FieldGoals20to29Made],[FieldGoals30to39Attempted],[FieldGoals30to39Made],[FieldGoals40to49Attempted],[FieldGoals40to49Made],[FieldGoals50PlusAttempted],[FieldGoals50PlusMade],[PATAttempted] ,[PATMade]) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
-                            season_id, 0, player_id, games_started, games_played, fg_made, fg_attempt, fg19Att, fg19Made,
+                            "INSERT INTO PlayerStatLines ([SeasonId], [NFLWeek], [ProjectedStat], [PlayerId],[GamesStarted],[GamesPlayed],[FieldGoalsMade],[FieldGoalsAttempted],[FieldGoals1to19Attempted],[FieldGoals1to19Made],[FieldGoals20to29Attempted],[FieldGoals20to29Made],[FieldGoals30to39Attempted],[FieldGoals30to39Made],[FieldGoals40to49Attempted],[FieldGoals40to49Made],[FieldGoals50PlusAttempted],[FieldGoals50PlusMade],[PATAttempted] ,[PATMade]) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+                            season_id, 0, 0, player_id, games_started, games_played, fg_made, fg_attempt, fg19Att, fg19Made,
                             fg20Att, fg20Made, fg30Att, fg30Made, fg40Att, fg40Made, fg50Att, fg50Made, xp_attempt,
                             xp_made)
                         kicking_cursor.commit()

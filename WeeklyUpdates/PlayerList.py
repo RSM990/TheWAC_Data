@@ -13,8 +13,8 @@ class PlayerListModel:
 
         self.connection = pyodbc.connect(settings.CURRENT_CONNECTION_STRING)
         self.cursor = self.connection.cursor()
-
-        for letter in ascii_uppercase:
+        start_index = ascii_uppercase.index('T')
+        for letter in ascii_uppercase[start_index:]:
             print(letter)
             soup = get_soup(f'https://www.pro-football-reference.com/players/{letter}/')
 

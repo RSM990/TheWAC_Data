@@ -20,10 +20,10 @@ class NFLRosterModel:
         self.connection1 = pyodbc.connect(settings.CURRENT_CONNECTION_STRING)
         self.cursor = self.connection.cursor()
 
-        for team_id in range(19, 33):
+        for team_id in range(1, 33):
             team = translate_team_id_to_code(team_id).lower()
-
-            url = f'https://www.pro-football-reference.com/teams/{team}/2023_roster.htm'
+            print(f"Currently on team id: {team_id}")
+            url = f'https://www.pro-football-reference.com/teams/{team}/2024_roster.htm'
             print(url)
 
             service = Service()
@@ -34,7 +34,7 @@ class NFLRosterModel:
             options.add_argument("--no-sandbox")
             options.add_argument("--disable-extensions")
             options.add_argument("--dns-prefetch-disable")
-            options.add_argument("--disable-gpu")
+            # options.add_argument("--disable-gpu")
             driver = webdriver.Chrome(service=service, options=options)
             driver.get(url)
 

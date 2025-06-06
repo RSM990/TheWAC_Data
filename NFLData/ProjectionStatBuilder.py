@@ -22,7 +22,7 @@ class ProjectionStatBuilder:
         url = f'https://www.fantasypros.com/nfl/projections/qb.php?week={week}'
         soup = get_soup(url)
         rows = soup.find_all("table")[0].find_all('tbody')[0].find_all('tr')
-
+        print(url)
         passingCursor = self.connection.cursor()
 
         for data in rows:
@@ -38,8 +38,7 @@ class ProjectionStatBuilder:
                 last = last + ' ' + name
 
             last = last.strip()
-
-            nflTeam = cols[0].getText().split(' ')[-2]
+            nflTeam = cols[0].getText().split(' ')[-1]
             passAttempt = float(cols[1].getText().replace(',', ''))
             complete = float(cols[2].getText().replace(',', ''))
             passYards = float(cols[3].getText().replace(',', ''))
@@ -53,6 +52,7 @@ class ProjectionStatBuilder:
             sql = "SELECT * FROM Players WHERE FirstName  LIKE ? AND LastName LIKE ? AND NFLTeamId = ? AND Position = 'QB' "
             firstNameParam = f'%{first}%'
             lastNameParam = f'%{last}%'
+            print(firstNameParam, lastNameParam, nflTeam)
             nflTeamId = translate_team_name_to_id(nflTeam)
             dbPlayer = passingCursor.execute(sql, firstNameParam, lastNameParam, nflTeamId)
             for row in dbPlayer.fetchall():
@@ -106,7 +106,7 @@ class ProjectionStatBuilder:
 
             last = last.strip()
 
-            nflTeam = cols[0].getText().split(' ')[-2]
+            nflTeam = cols[0].getText().split(' ')[-1]
             rushAttempt = float(cols[1].getText().replace(',', ''))
             rushYards = float(cols[2].getText().replace(',', ''))
             rushTD = float(cols[3].getText().replace(',', ''))
@@ -165,7 +165,7 @@ class ProjectionStatBuilder:
 
             last = last.strip()
 
-            nflTeam = cols[0].getText().split(' ')[-2]
+            nflTeam = cols[0].getText().split(' ')[-1]
             rec = float(cols[1].getText().replace(',', ''))
             recYards = float(cols[2].getText().replace(',', ''))
             recTD = float(cols[3].getText().replace(',', ''))
@@ -224,7 +224,7 @@ class ProjectionStatBuilder:
 
             last = last.strip()
 
-            nflTeam = cols[0].getText().split(' ')[-2]
+            nflTeam = cols[0].getText().split(' ')[-1]
             rec = float(cols[1].getText().replace(',', ''))
             recYards = float(cols[2].getText().replace(',', ''))
             recTD = float(cols[3].getText().replace(',', ''))
@@ -281,7 +281,7 @@ class ProjectionStatBuilder:
 
             last = last.strip()
 
-            nflTeam = cols[0].getText().split(' ')[-2]
+            nflTeam = cols[0].getText().split(' ')[-1]
             fg = float(cols[1].getText().replace(',', ''))
             fga = float(cols[2].getText().replace(',', ''))
             xp = float(cols[3].getText().replace(',', ''))

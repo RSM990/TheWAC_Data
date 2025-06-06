@@ -12,20 +12,21 @@ from NFLData.NFLGameLoader import NFLGameLoader
 from NFLData.SeasonStatBuilder import SeasonStatBuilder
 from NFLData.ProjectionStatBuilder import ProjectionStatBuilder
 from NFLData.RookieLoader import RookieLoader
-
+#
 # rosters = NFLRosterModel()
 # players = PlayerListModel()
 # nflGames = NFLGameLoader()
 
-# rookies = RookieLoader(2023)
+# rookies = RookieLoader(2024)
 
 # data = SeasonStatBuilder(2019, 2)
 # data = SeasonStatBuilder(2020, 3)
 # data = SeasonStatBuilder(2021, 4)
 # data = SeasonStatBuilder(2022, 5)
 # data = SeasonStatBuilder(2023, 6)
+# data = SeasonStatBuilder(2024, 7)
 
-# data = ProjectionStatBuilder(6, 'draft')
-# data = ProjectionStatBuilder(6, 11)
-data = GameScorerModel(6, 11)
+# data = ProjectionStatBuilder(7, 'draft')
+# data = ProjectionStatBuilder(7, 14)
+data = GameScorerModel(7, 17)
 
